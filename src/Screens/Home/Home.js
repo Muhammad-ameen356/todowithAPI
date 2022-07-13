@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTodo,
   deleteTodo,
-  getTodoFromApi,
+  // getTodoFromApi,
+  fetchTodo,
 } from "../../store/Reducers/todoReducer";
 import "./Home.css";
 import SyncLoader from "react-spinners/SyncLoader";
@@ -16,13 +17,19 @@ const Home = () => {
   const { todo, loading } = useSelector((state) => state.todo);
 
   useEffect(() => {
-    dispatch(getTodoFromApi());
+    dispatch(fetchTodo());
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputVal);
-    dispatch(addTodo(inputVal, setInputVal));
+    dispatch(addTodo(inputVal, setInputVal))
+      .then((response) => {
+        console.log("first", response.payload);
+        setInputVal("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleDeleteTodo = (id) => {
